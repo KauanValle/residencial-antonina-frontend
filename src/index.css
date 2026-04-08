@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-100 font-sans antialiased;
+  }
+  * {
+    @apply border-slate-800;
+  }
+}
+
+@layer components {
+  .input-field {
+    @apply w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-slate-100
+           placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent
+           transition-all duration-200;
+  }
+  .btn-primary {
+    @apply bg-brand-500 hover:bg-brand-600 text-white font-medium px-4 py-2.5 rounded-lg text-sm
+           transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2;
+  }
+  .btn-secondary {
+    @apply bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium px-4 py-2.5 rounded-lg text-sm
+           transition-all duration-200 flex items-center gap-2;
+  }
+  .btn-danger {
+    @apply bg-red-900/40 hover:bg-red-900/70 text-red-400 font-medium px-4 py-2.5 rounded-lg text-sm
+           transition-all duration-200 flex items-center gap-2;
+  }
+  .card {
+    @apply bg-slate-900 border border-slate-800 rounded-xl;
+  }
+  .badge-admin {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-medium bg-brand-900/60 text-brand-300 border border-brand-800;
+  }
+  .badge-operator {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-medium bg-slate-800 text-slate-400 border border-slate-700;
+  }
+  .badge-entrada {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-900/50 text-emerald-400;
+  }
+  .badge-saida {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-900/50 text-amber-400;
+  }
+}
