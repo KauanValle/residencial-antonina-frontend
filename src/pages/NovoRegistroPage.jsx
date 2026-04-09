@@ -12,9 +12,8 @@ export default function NovoRegistroPage() {
   const [form, setForm] = useState({
     nomePessoa: '',
     tipoAcesso: '',
-    destino: '',
-    blocos: '',
-    apartamentos: '',
+    bloco: '',
+    apartamento: '',
     temVeiculo: false,
     modeloCarro: '',
     placa: '',
@@ -28,7 +27,7 @@ export default function NovoRegistroPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    if (!form.nomePessoa || !form.tipoAcesso || !form.destino) {
+    if (!form.nomePessoa || !form.tipoAcesso) {
       setError('Preencha todos os campos obrigatórios.');
       return;
     }
@@ -76,7 +75,7 @@ export default function NovoRegistroPage() {
             />
           </div>
 
-          {/* Tipo e Destino */}
+          {/* Tipo, Bloco e Apto */}
           <div className="grid grid-cols-1 gap-4">
             <div>
               <label className="block text-xs font-medium text-slate-400 mb-1.5">
@@ -99,8 +98,8 @@ export default function NovoRegistroPage() {
               </label>
               <select
                 className="input-field"
-                value={form.blocos}
-                onChange={e => set('blocos', e.target.value)}
+                value={form.bloco}
+                onChange={e => set('bloco', e.target.value)}
               >
                 <option value="">Selecione...</option>
                 {BLOCOS.map(t => (
@@ -114,8 +113,8 @@ export default function NovoRegistroPage() {
               </label>
               <select
                 className="input-field"
-                value={form.apartamentos}
-                onChange={e => set('apartamentos', e.target.value)}
+                value={form.apartamento}
+                onChange={e => set('apartamento', e.target.value)}
               >
                 <option value="">Selecione...</option>
                 {APARTAMENTOS.map(t => (
