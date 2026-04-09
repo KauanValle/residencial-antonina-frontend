@@ -4,6 +4,8 @@ import api from '../services/api';
 import { ArrowLeft, Car, Save } from 'lucide-react';
 
 const TIPOS_ACESSO = ['Visitante', 'Prestador de Serviço', 'Fornecedor', 'Funcionário', 'Entregador', 'Outro'];
+const BLOCOS = [1,2,3,4,5,6,7,8,9,10]
+const APARTAMENTOS = [11,12,13,14,21,22,23,24,31,32,33,34,41,42,43,44]
 
 export default function NovoRegistroPage() {
   const navigate = useNavigate();
@@ -11,6 +13,8 @@ export default function NovoRegistroPage() {
     nomePessoa: '',
     tipoAcesso: '',
     destino: '',
+    blocos: '',
+    apartamentos: '',
     temVeiculo: false,
     modeloCarro: '',
     placa: '',
@@ -73,7 +77,7 @@ export default function NovoRegistroPage() {
           </div>
 
           {/* Tipo e Destino */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <div>
               <label className="block text-xs font-medium text-slate-400 mb-1.5">
                 Tipo de Acesso <span className="text-red-500">*</span>
@@ -91,15 +95,33 @@ export default function NovoRegistroPage() {
             </div>
             <div>
               <label className="block text-xs font-medium text-slate-400 mb-1.5">
-                Destino <span className="text-red-500">*</span>
+                Bloco <span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
+              <select
                 className="input-field"
-                placeholder="Ex: Apto 302, Bloco B..."
-                value={form.destino}
-                onChange={e => set('destino', e.target.value)}
-              />
+                value={form.blocos}
+                onChange={e => set('blocos', e.target.value)}
+              >
+                <option value="">Selecione...</option>
+                {BLOCOS.map(t => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-400 mb-1.5">
+                Apartamento <span className="text-red-500">*</span>
+              </label>
+              <select
+                className="input-field"
+                value={form.apartamentos}
+                onChange={e => set('apartamentos', e.target.value)}
+              >
+                <option value="">Selecione...</option>
+                {APARTAMENTOS.map(t => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
             </div>
           </div>
 
