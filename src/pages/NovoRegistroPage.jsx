@@ -17,7 +17,11 @@ export default function NovoRegistroPage() {
     temVeiculo: false,
     modeloCarro: '',
     placa: '',
-    dataEntrada: new Date().toISOString().slice(0, 16),
+    dataEntrada: new Intl.DateTimeFormat('sv-SE', {
+      timeZone: 'America/Sao_Paulo',
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit',
+    }).format(new Date()).replace(' ', 'T'),
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');

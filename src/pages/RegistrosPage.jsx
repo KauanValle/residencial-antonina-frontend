@@ -15,13 +15,14 @@ export default function RegistrosPage() {
   const [filters, setFilters] = useState({ nome: '', dataInicio: '', dataFim: '' });
   const [loading, setLoading] = useState(true);
   const [registrandoSaida, setRegistrandoSaida] = useState(null);
-
+  console.log(registros)
   const fetchRegistros = useCallback(async (page = 1) => {
     setLoading(true);
     try {
       const params = { page, limit: 10, ...filters };
       Object.keys(params).forEach(k => !params[k] && delete params[k]);
       const res = await api.get('/registros', { params });
+      console.log(res.data.data)
       setRegistros(res.data.data);
       setPagination(res.data.pagination);
     } catch (err) {
@@ -48,7 +49,14 @@ export default function RegistrosPage() {
   const clearFilters = () => setFilters({ nome: '', dataInicio: '', dataFim: '' });
   const hasFilters = filters.nome || filters.dataInicio || filters.dataFim;
 
-  const fmtDate = (d) => d ? format(new Date(d), "dd/MM/yy HH:mm", { locale: ptBR }) : '—';
+  const fmtDate = (d) => {
+    if (!d) return '—';
+    return new Date(d).toLocaleString('pt-BR', {
+      day: '2-digit', month: '2-digit', year: '2-digit',
+      hour: '2-digit', minute: '2-digit',
+      hour12: false,
+    });
+  };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -69,8 +77,8 @@ export default function RegistrosPage() {
 
       {/* Filters */}
       <div className="card p-4 mb-4">
-        <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:items-end">
-          <div className="w-full sm:flex-1 sm:min-w-48">
+        <div className="flex flex-wrap gap-3 items-end">
+          <div className="flex-1 min-w-48">
             <label className="block text-xs text-slate-500 mb-1.5">Buscar por nome</label>
             <div className="relative">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -83,28 +91,26 @@ export default function RegistrosPage() {
               />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:flex sm:gap-3">
-            <div>
-              <label className="block text-xs text-slate-500 mb-1.5 flex items-center gap-1"><Calendar size={11} />De</label>
-              <input
-                type="date"
-                className="input-field"
-                value={filters.dataInicio}
-                onChange={e => setFilters(f => ({ ...f, dataInicio: e.target.value }))}
-              />
-            </div>
-            <div>
-              <label className="block text-xs text-slate-500 mb-1.5 flex items-center gap-1"><Calendar size={11} />Até</label>
-              <input
-                type="date"
-                className="input-field"
-                value={filters.dataFim}
-                onChange={e => setFilters(f => ({ ...f, dataFim: e.target.value }))}
-              />
-            </div>
+          <div>
+            <label className="block text-xs text-slate-500 mb-1.5 flex items-center gap-1"><Calendar size={11} />De</label>
+            <input
+              type="date"
+              className="input-field"
+              value={filters.dataInicio}
+              onChange={e => setFilters(f => ({ ...f, dataInicio: e.target.value }))}
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-slate-500 mb-1.5 flex items-center gap-1"><Calendar size={11} />Até</label>
+            <input
+              type="date"
+              className="input-field"
+              value={filters.dataFim}
+              onChange={e => setFilters(f => ({ ...f, dataFim: e.target.value }))}
+            />
           </div>
           {hasFilters && (
-            <button onClick={clearFilters} className="btn-secondary w-full sm:w-auto">
+            <button onClick={clearFilters} className="btn-secondary">
               <X size={14} />
               Limpar
             </button>
@@ -112,8 +118,8 @@ export default function RegistrosPage() {
         </div>
       </div>
 
-      {/* Table — desktop */}
-      <div className="card overflow-hidden hidden md:block">
+      {/* Table */}
+      <div className="card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -147,7 +153,7 @@ export default function RegistrosPage() {
                   <td className="px-4 py-3">
                     <span className="badge-entrada">{r.tipoAcesso}</span>
                   </td>
-                  <td className="px-4 py-3 text-slate-400">{r.destino}</td>
+                  <td className="px-4 py-3 text-slate-400">{r.bloco} - {r.apartamento}</td>
                   <td className="px-4 py-3">
                     {r.temVeiculo ? (
                       <div className="flex items-center gap-1 text-slate-300">
@@ -206,98 +212,6 @@ export default function RegistrosPage() {
                 onClick={() => fetchRegistros(pagination.page + 1)}
                 disabled={pagination.page === pagination.totalPages}
                 className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 disabled:opacity-30 transition-all"
-              >
-                <ChevronRight size={16} />
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Cards — mobile */}
-      <div className="md:hidden space-y-3">
-        {loading ? (
-          <div className="card p-8 text-center text-slate-500">
-            <div className="flex items-center justify-center gap-2">
-              <div className="w-4 h-4 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />
-              Carregando...
-            </div>
-          </div>
-        ) : registros.length === 0 ? (
-          <div className="card p-8 text-center text-slate-600">Nenhum registro encontrado.</div>
-        ) : registros.map(r => (
-          <div key={r.id} className="card p-4 space-y-3">
-            {/* Nome + tipo */}
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <p className="font-semibold text-slate-100">{r.nomePessoa}</p>
-                <p className="text-xs text-slate-500 mt-0.5">{r.destino}</p>
-              </div>
-              <span className="badge-entrada shrink-0">{r.tipoAcesso}</span>
-            </div>
-
-            {/* Datas */}
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="bg-slate-800/60 rounded-lg p-2.5">
-                <p className="text-slate-500 mb-0.5">Entrada</p>
-                <p className="font-mono text-slate-300">{fmtDate(r.dataEntrada)}</p>
-              </div>
-              <div className="bg-slate-800/60 rounded-lg p-2.5">
-                <p className="text-slate-500 mb-0.5">Saída</p>
-                {r.dataSaida
-                  ? <p className="font-mono text-slate-300">{fmtDate(r.dataSaida)}</p>
-                  : <p className="text-amber-500">Em andamento</p>
-                }
-              </div>
-            </div>
-
-            {/* Veículo */}
-            {r.temVeiculo && (
-              <div className="flex items-center gap-2 text-xs text-slate-400 bg-slate-800/40 rounded-lg px-3 py-2">
-                <Car size={13} className="text-slate-500 shrink-0" />
-                <span>{r.modeloCarro}</span>
-                <span className="font-mono bg-slate-700 px-1.5 py-0.5 rounded">{r.placa}</span>
-              </div>
-            )}
-
-            {/* Footer */}
-            <div className="flex items-center justify-between pt-1 border-t border-slate-800">
-              <div className="flex items-center gap-1.5 text-xs text-slate-500">
-                <User size={11} />
-                {r.criadoPor?.nome}
-              </div>
-              {!r.dataSaida && (
-                <button
-                  onClick={() => handleSaida(r.id)}
-                  disabled={registrandoSaida === r.id}
-                  className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-amber-900/30 hover:bg-amber-900/50 text-amber-400 transition-all disabled:opacity-50"
-                >
-                  <LogOut size={12} />
-                  {registrandoSaida === r.id ? '...' : 'Registrar Saída'}
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
-
-        {/* Pagination mobile */}
-        {pagination.totalPages > 1 && (
-          <div className="flex items-center justify-between px-1 py-2">
-            <span className="text-xs text-slate-500">
-              Página {pagination.page} de {pagination.totalPages}
-            </span>
-            <div className="flex gap-2">
-              <button
-                onClick={() => fetchRegistros(pagination.page - 1)}
-                disabled={pagination.page === 1}
-                className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 disabled:opacity-30 transition-all"
-              >
-                <ChevronLeft size={16} />
-              </button>
-              <button
-                onClick={() => fetchRegistros(pagination.page + 1)}
-                disabled={pagination.page === pagination.totalPages}
-                className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 disabled:opacity-30 transition-all"
               >
                 <ChevronRight size={16} />
               </button>
