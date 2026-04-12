@@ -43,7 +43,7 @@ export default function Layout() {
               <Building2 size={16} className="text-white" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-slate-100 leading-tight">Portaria</p>
+              <p className="text-sm font-semibold text-slate-100 leading-tight">Residencial Antonina</p>
               <p className="text-xs text-slate-500 font-mono">Sistema v1.0</p>
             </div>
           </div>
