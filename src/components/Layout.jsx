@@ -3,7 +3,9 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import {
   ClipboardList, Users, LogOut, Shield,
-  Building2, Menu, X
+  Building2, Menu, X,
+  PersonStanding,
+  GlassWater
 } from 'lucide-react';
 
 export default function Layout() {
@@ -68,7 +70,20 @@ export default function Layout() {
             <ClipboardList size={16} />
             Registros
           </NavLink>
-
+          <NavLink
+            to="/registro-agua"
+            onClick={closeSidebar}
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                isActive
+                  ? 'bg-brand-500/20 text-brand-300 border border-brand-500/30'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+              }`
+            }
+          >
+            <GlassWater size={16} />
+            Registro de água
+          </NavLink>
           {isAdmin && (
             <NavLink
               to="/usuarios"

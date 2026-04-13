@@ -15,7 +15,7 @@ export default function RegistrosPage() {
   const [filters, setFilters] = useState({ nome: '', dataInicio: '', dataFim: '' });
   const [loading, setLoading] = useState(true);
   const [registrandoSaida, setRegistrandoSaida] = useState(null);
-  console.log(registros)
+
   const fetchRegistros = useCallback(async (page = 1) => {
     setLoading(true);
     try {

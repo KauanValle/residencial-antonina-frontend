@@ -5,6 +5,10 @@ import Layout from './components/Layout';
 import RegistrosPage from './pages/RegistrosPage';
 import NovoRegistroPage from './pages/NovoRegistroPage';
 import UsuariosPage from './pages/UsuariosPage';
+import VisitantesPage from './pages/VisitantesPage';
+import RegistroAguaPage from './pages/RegistroAguapage';
+import NovoRegistroAguaPage from './pages/NovoRegistroAguaPage';
+import UpdateRegistroAguaPage from './pages/UpdateRegistroAguaPage';
 
 function PrivateRoute({ children, adminOnly = false }) {
   const { user, loading } = useAuth();
@@ -30,6 +34,10 @@ export default function App() {
             <Route index element={<Navigate to="/registros" replace />} />
             <Route path="registros" element={<RegistrosPage />} />
             <Route path="registros/novo" element={<NovoRegistroPage />} />
+            {/* <Route path="visitantes" element={<VisitantesPage/>}/> */}
+            <Route path="registro-agua" element={<RegistroAguaPage/>} />
+            <Route path="registro-agua/novo" element={<NovoRegistroAguaPage/>} />
+            <Route path="registro-agua/:id/leitura-noite" element={<UpdateRegistroAguaPage />} />
             <Route path="usuarios" element={
               <PrivateRoute adminOnly><UsuariosPage /></PrivateRoute>
             } />
