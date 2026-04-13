@@ -6,9 +6,9 @@ import RegistrosPage from './pages/RegistrosPage';
 import NovoRegistroPage from './pages/NovoRegistroPage';
 import UsuariosPage from './pages/UsuariosPage';
 import VisitantesPage from './pages/VisitantesPage';
-import RegistroAguaPage from './pages/RegistroAguapage';
 import NovoRegistroAguaPage from './pages/NovoRegistroAguaPage';
 import UpdateRegistroAguaPage from './pages/UpdateRegistroAguaPage';
+import RegistroAguaPage from './pages/RegistroAguaPage';
 
 function PrivateRoute({ children, adminOnly = false }) {
   const { user, loading } = useAuth();
