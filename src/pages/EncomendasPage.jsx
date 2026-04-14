@@ -304,7 +304,6 @@ export default function EncomendasPage() {
                     )}
                   </td>
                   <td className="px-4 py-3 text-xs text-slate-500">
-                    {console.log(e)}
                     <span className="flex items-center gap-1"><img src={e.selfieRetirada} className="w-24 h-16"/> </span>
                   </td>
                 </tr>
