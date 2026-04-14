@@ -5,6 +5,7 @@ import {
   Package, Plus, Search, X, ChevronLeft, ChevronRight,
   Camera, CheckCircle, Clock, User, Building2, CameraOff, RotateCcw, Save
 } from 'lucide-react';
+import SignatureCanvas from 'react-signature-canvas';
 
 export default function EncomendasPage() {
   const navigate = useNavigate();
@@ -114,10 +115,10 @@ export default function EncomendasPage() {
     pararCamera();
   };
 
-  const resetarFoto = () => {
-    setSelfiePreview(null);
-    setRetiradaForm(f => ({ ...f, selfieRetirada: '' }));
-  };
+  // const resetarFoto = () => {
+  //   setSelfiePreview(null);
+  //   setRetiradaForm(f => ({ ...f, selfieRetirada: '' }));
+  // };
 
   const abrirModal = (encomenda) => {
     setModalRetirada(encomenda);
@@ -153,6 +154,30 @@ export default function EncomendasPage() {
 
   const hasFilters = filters.destinatario || filters.status || filters.bloco;
   const clearFilters = () => setFilters({ destinatario: '', status: '', bloco: '' });
+
+  const sigCanvas = useRef({});
+  const [imageURL, setImageURL] = useState(null);
+
+  // Limpa o desenho
+  const limpar = () => sigCanvas.current.clear();
+
+  // Salva a imagem no formato Base64 (pode enviar para o banco de dados)
+  const salvar = () => {
+    if (sigCanvas.current.isEmpty()) {
+      alert("Por favor, forneça uma assinatura primeiro.");
+      return;
+    }
+  
+    // Em vez de usar getTrimmedCanvas(), acessamos o canvas diretamente
+    const canvas = sigCanvas.current.getCanvas();
+    
+    // Se você realmente precisar "trimmar" (remover espaços vazios), 
+    // pode salvar o canvas inteiro primeiro:
+    const data = canvas.toDataURL('image/png');
+    
+    setImageURL(data);
+    setRetiradaForm(f => ({ ...f, selfieRetirada: data }));
+  };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -224,7 +249,7 @@ export default function EncomendasPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-800 bg-slate-900/80">
-                {['Destinatário', 'Bloco/Apto', 'Chegada', 'Itens', 'Status', 'Retirado por', 'Porteiro', 'Ação'].map(h => (
+                {['Destinatário', 'Bloco/Apto', 'Chegada', 'Itens', 'Status', 'Retirado por', 'Porteiro', 'Ação', 'Assinatura'].map(h => (
                   <th key={h} className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{h}</th>
                 ))}
               </tr>
@@ -277,6 +302,10 @@ export default function EncomendasPage() {
                         <CheckCircle size={12} /> Registrar Retirada
                       </button>
                     )}
+                  </td>
+                  <td className="px-4 py-3 text-xs text-slate-500">
+                    {console.log(e)}
+                    <span className="flex items-center gap-1"><img src={e.selfieRetirada} className="w-24 h-16"/> </span>
                   </td>
                 </tr>
               ))}
@@ -399,7 +428,7 @@ export default function EncomendasPage() {
               </div>
 
               {/* Selfie */}
-              <div>
+              {/* <div>
                 <label className="block text-xs font-medium text-slate-400 mb-2">
                   Selfie <span className="text-slate-600">(opcional)</span>
                 </label>
@@ -449,6 +478,36 @@ export default function EncomendasPage() {
                     </button>
                   </div>
                 )}
+              </div> */}
+
+              {/* Assinatura Digital */}
+
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', padding: '20px' }}>
+                <h3>Assinatura Digital</h3>
+                
+                <div style={{ border: '2px dashed #ccc', borderRadius: '8px', background: '#f9f9f9' }}>
+                  <SignatureCanvas
+                    ref={sigCanvas}
+                    canvasProps={{
+                      width: 350,
+                      height: 200,
+                      className: 'signature-canvas'
+                    }}
+                    penColor="#888"
+                  />
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button onClick={limpar} style={btnStyle}>Limpar</button>
+                  <button onClick={salvar} style={{ ...btnStyle, backgroundColor: '#007bff', color: 'white' }}>Salvar Assinatura</button>
+                </div>
+
+                {imageURL && (
+                  <div style={{ marginTop: '20px' }}>
+                    <p>Preview da assinatura salva:</p>
+                    <img src={imageURL} alt="Assinatura" style={{ border: '1px solid #000', maxWidth: '100%' }} />
+                  </div>
+                )}
               </div>
 
               {erroModal && (
@@ -473,3 +532,10 @@ export default function EncomendasPage() {
     </div>
   );
 }
+
+const btnStyle = {
+  padding: '10px 20px',
+  cursor: 'pointer',
+  borderRadius: '5px',
+  border: '1px solid #ccc'
+};
