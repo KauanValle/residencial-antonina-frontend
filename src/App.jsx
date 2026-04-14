@@ -9,6 +9,9 @@ import VisitantesPage from './pages/VisitantesPage';
 import NovoRegistroAguaPage from './pages/NovoRegistroAguaPage';
 import UpdateRegistroAguaPage from './pages/UpdateRegistroAguaPage';
 import RegistroAguaPage from './pages/RegistroAguaPage';
+import EncomendasPage from './pages/EncomendasPage';
+import NovaEncomendaPage from './pages/NovaEncomendaPage';
+
 
 function PrivateRoute({ children, adminOnly = false }) {
   const { user, loading } = useAuth();
@@ -38,6 +41,8 @@ export default function App() {
             <Route path="registro-agua" element={<RegistroAguaPage/>} />
             <Route path="registro-agua/novo" element={<NovoRegistroAguaPage/>} />
             <Route path="registro-agua/:id/leitura-noite" element={<UpdateRegistroAguaPage />} />
+            <Route path="encomendas" element={<EncomendasPage />} />
+            <Route path="encomendas/nova" element={<NovaEncomendaPage />} />
             <Route path="usuarios" element={
               <PrivateRoute adminOnly><UsuariosPage /></PrivateRoute>
             } />

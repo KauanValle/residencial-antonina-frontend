@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://residencial-antonina-backend-production.up.railway.app',
+        target: 'https://residencial-antonina-backend-pro÷duction.up.railway.app',
         // target: "http://localhost:3001",
         changeOrigin: true,
       },

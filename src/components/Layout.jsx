@@ -5,7 +5,8 @@ import {
   ClipboardList, Users, LogOut, Shield,
   Building2, Menu, X,
   PersonStanding,
-  GlassWater
+  GlassWater,
+  Package
 } from 'lucide-react';
 
 export default function Layout() {
@@ -83,6 +84,20 @@ export default function Layout() {
           >
             <GlassWater size={16} />
             Registro de água
+          </NavLink>
+          <NavLink
+            to="/encomendas"
+            onClick={closeSidebar}
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                isActive
+                  ? 'bg-brand-500/20 text-brand-300 border border-brand-500/30'
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
+              }`
+            }
+          >
+            <Package size={16} />
+            Encomendas
           </NavLink>
           {isAdmin && (
             <NavLink
