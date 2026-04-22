@@ -1,4 +1,4 @@
-import { Calendar, FileIcon, GlassWater, LogOut, Plus, RegexIcon, Search, X } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, FileIcon, GlassWater, LogOut, Plus, RegexIcon, Search, Trash2, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
@@ -11,6 +11,7 @@ export default function RegistroAguaPage() {
     const navigate = useNavigate();
     const [registros, setRegistros] = useState([]);
     const [registrandoLeituraNoite, setRegistrandoLeituraNoite] = useState(null);
+    const [deletando, setDeletando] = useState(null);
 
     const fetchRegistros = useCallback(async (page = 1) => {
         setLoading(true);
@@ -41,6 +42,22 @@ export default function RegistroAguaPage() {
 
       const handleLeituraNoite = (id) => {
         navigate(`/registro-agua/${id}/leitura-noite`);
+      };
+
+      const handleDelete = async (id) => {
+        if (!confirm('Tem certeza que deseja deletar este registro?')) return;
+        
+        setDeletando(id);
+        try {
+          await api.delete(`/registro-agua/${id}`);
+          // Recarrega a página atual
+          await fetchRegistros(pagination.page);
+        } catch (err) {
+          console.error(err);
+          alert('Erro ao deletar registro');
+        } finally {
+          setDeletando(null);
+        }
       };
 
     return (
@@ -105,16 +122,27 @@ export default function RegistroAguaPage() {
                         </td>
                         <td className="px-4 py-3 font-mono text-xs text-slate-400">{fmtDate(r.dataLeitura)}</td>
                         <td className="px-4 py-3 font-mono text-xs">
-                        {!r.leituraNoite && (
-                            <button
-                                onClick={() => handleLeituraNoite(r.id)}
-                                disabled={registrandoLeituraNoite === r.id}
-                                className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-amber-900/30 hover:bg-amber-900/50 text-amber-400 transition-all disabled:opacity-50"
-                            >
-                                <FileIcon size={12} />
-                                {registrandoLeituraNoite === r.id ? '...' : 'Registrar Leitura Noite'}
-                            </button>
-                        )}
+                        <div className="flex items-center gap-2">
+                          {!r.leituraNoite && (
+                              <button
+                                  onClick={() => handleLeituraNoite(r.id)}
+                                  disabled={registrandoLeituraNoite === r.id}
+                                  className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-amber-900/30 hover:bg-amber-900/50 text-amber-400 transition-all disabled:opacity-50"
+                              >
+                                  <FileIcon size={12} />
+                                  {registrandoLeituraNoite === r.id ? '...' : 'Registrar Leitura Noite'}
+                              </button>
+                          )}
+                          <button
+                              onClick={() => handleDelete(r.id)}
+                              disabled={deletando === r.id}
+                              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg bg-red-900/30 hover:bg-red-900/50 text-red-400 transition-all disabled:opacity-50"
+                              title="Deletar registro"
+                          >
+                              <Trash2 size={12} />
+                              {deletando === r.id ? '...' : 'Deletar'}
+                          </button>
+                        </div>
                         </td>
                         </tr>
                     ))}
